@@ -57,6 +57,7 @@ export default function SignUp({
   const [branchId, setBranchId] = useState("");
   const [minQuantity, setMinQuantity] = useState("");
   const [unitValue, setUnitValue] = useState("");
+  const [isPackOfBread, setIsPackOfBread] = useState(false);
   const [data, setData] = useState({
     name: "",
     categoryId: 0,
@@ -67,6 +68,9 @@ export default function SignUp({
       setData(product);
       setBranchListSelected(product.branchs);
       setUnitValue(product.unitValue);
+      if (product.name.toString().toUpperCase().includes("PÃO")) {
+        setIsPackOfBread(true);
+      }
     }
   }, [product]);
 
@@ -115,12 +119,26 @@ export default function SignUp({
     };
 
     const branch = [...branchListSelected, data];
-    console.log("data", branch);
+    // console.log("data", branch);
     setBranchListSelected(branch);
     setMinQuantity("");
     setBranchId("");
   };
+  const textMinQuantity = (quantity) => {
+    if (isPackOfBread) {
+      const numberOfBreadsPerPack = 8;
+      const numberOfPacks = Math.floor(quantity / numberOfBreadsPerPack);
+      const modNumberOfPacks = quantity % numberOfBreadsPerPack;
 
+      if (modNumberOfPacks > 0) {
+        return `${quantity} (${numberOfPacks}/${modNumberOfPacks})`;
+      }
+
+      return `${quantity} (${numberOfPacks})`;
+    }
+
+    return quantity;
+  };
   const handleDeleteBranch = (branchId) => {
     setBranchListSelected((prevState) =>
       prevState.filter((e) => e.branchId != branchId)
@@ -312,7 +330,7 @@ export default function SignUp({
                       <div>
                         <Chip
                           style={{ marginBottom: "8px" }}
-                          label={e.minQuantity}
+                          label={textMinQuantity(e.minQuantity)}
                           color={"primary"}
                         />
                         <IconButton

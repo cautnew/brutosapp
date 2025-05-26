@@ -100,13 +100,13 @@ export default function CentralStock() {
               setMerchandiseList(response.data.items);
               setTotal(response.data.total);
             })
-            .catch((err) => console.log("@@@ err", err))
+            .catch((err) => console.error("@@@ err", err))
             .finally(() => setLoading(false));
         }
         setProductsList(data);
         setProductId(data[0].id);
       })
-      .catch((err) => console.log("@@@ err", err))
+      .catch((err) => console.error("@@@ err", err))
       .finally(() => {
         setLoading(false);
       });
@@ -131,7 +131,7 @@ export default function CentralStock() {
           setMerchandiseList(response.data.items);
           setTotal(response.data.total);
         })
-        .catch((err) => console.log("@@@ err", err))
+        .catch((err) => console.error("@@@ err", err))
         .finally(() => setLoading(false));
     } else if (value === "see_all") {
       setLoading(true);
@@ -140,7 +140,7 @@ export default function CentralStock() {
         .then((response) => {
           setAvailable(response.data);
         })
-        .catch((err) => console.log("@@@ err", err))
+        .catch((err) => console.error("@@@ err", err))
         .finally(() => setLoading(false));
     }
 
@@ -157,7 +157,7 @@ export default function CentralStock() {
         setMerchandiseList(response.data.items);
         setTotal(response.data.total);
       })
-      .catch((err) => console.log("@@@ err", err))
+      .catch((err) => console.error("@@@ err", err))
       .finally(() => setLoading(false));
     setProductId(value);
   };
@@ -190,7 +190,7 @@ export default function CentralStock() {
         setMerchandiseList(response.data.items);
         setTotal(response.data.total);
       })
-      .catch((err) => console.log("@@@ err", err))
+      .catch((err) => console.error("@@@ err", err))
       .finally(() => setLoading(false));
   };
 
@@ -405,8 +405,8 @@ export default function CentralStock() {
       case "delete":
         component = {};
         break;
-      default:
-        console.log("nada");
+      // default:
+      //   console.log("nada");
     }
     return component;
   };
@@ -705,7 +705,6 @@ export default function CentralStock() {
                   >
                     Estoque Central: {total}
                   </Typography>
-                  <Divider />
                 </div>
               )}
 
@@ -745,10 +744,10 @@ const useStyles = makeStyles((theme) => ({
 function SimpleTable({ list, colunmList }) {
   const classes = useStyles();
   // const [checked, setChecked] = React.useState([0]);
-  console.log("@@@ list", list);
+  // console.log("@@@ list", list);
 
   if (!list || !list.length) return null;
-  console.log("@@@ SimpleTable");
+  // console.log("@@@ SimpleTable");
   return (
     <TableContainer
       component={Paper}

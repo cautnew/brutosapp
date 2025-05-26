@@ -58,7 +58,7 @@ export default function Branches({ handleBrancheList }) {
         setStartHour(data.startHour);
         setEndHour(data.endHour);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
       .finally((err) => setLoading(false));
   };
 
@@ -378,8 +378,8 @@ export default function Branches({ handleBrancheList }) {
           </div>
         );
         break;
-      default:
-        console.log("nada");
+      // default:
+      //   console.log("nada");
     }
     return component;
   };

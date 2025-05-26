@@ -321,7 +321,7 @@ export default function HomePage() {
   };
 
   const handleChangeCategory = (value) => {
-    console.log("@@@ category", value);
+    // console.log("@@@ category", value);
     setCategory(value);
     // handleChangeBranchesContext(value);
   };
@@ -386,7 +386,7 @@ export default function HomePage() {
   );
 
   const getContentComponent = (selected) => {
-    console.log("@@@ selected", selected);
+    // console.log("@@@ selected", selected);
     const module = selected;
     switch (module) {
       case "central_stock":

@@ -75,10 +75,10 @@ function SimpleTable({
 }) {
   const classes = useStyles();
   // const [checked, setChecked] = React.useState([0]);
-  console.log("@@@ list", list);
+  // console.log("@@@ list", list);
 
   if (!list || !list.length) return null;
-  console.log("@@@ SimpleTable");
+  // console.log("@@@ SimpleTable");
   return (
     <TableContainer
       component={Paper}
@@ -185,7 +185,7 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
         setProductsList(data);
         setProductId(data[0].id);
       })
-      .catch((err) => console.log("@@@ err", err))
+      .catch((err) => console.error("@@@ err", err))
       .finally(() => setLoading(false));
 
   const handleChangeStartDate = (e) => {
@@ -278,7 +278,7 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
       .then(({ data }) => {
         setNotesList(data);
       })
-      .catch((err) => console.log("@@@ err", err))
+      .catch((err) => console.error("@@@ err", err))
       .finally(() => {
         setLoading(false);
       });
@@ -796,8 +796,8 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
       case "delete":
         component = {};
         break;
-      default:
-        console.log("nada");
+      // default:
+      //   console.log("nada");
     }
     return component;
   };

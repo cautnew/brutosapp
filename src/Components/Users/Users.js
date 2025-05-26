@@ -27,7 +27,7 @@ export default function Users() {
   const { state } = useContext(UserContext);
   const [content, setContent] = useState("list");
 
-  console.log("@@@ state.currentBranche", state.currentBranche);
+  // console.log("@@@ state.currentBranche", state.currentBranche);
   const pathApi = getPathApi(state.currentBranche.CompanyBranchId);
 
   useEffect(() => {
@@ -234,8 +234,8 @@ export default function Users() {
           </div>
         );
         break;
-      default:
-        console.log("nada");
+      // default:
+      //   console.log("nada");
     }
     return component;
   };

@@ -1,6 +1,13 @@
 import React from "react";
 import api from "../../services/api";
-import { Divider } from "@material-ui/core";
+import {
+  Divider,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow, Typography,
+} from "@material-ui/core";
 
 export const ProductQuantityInAllBranches = (props) => {
   const { productId, startDate, endDate } = props;
@@ -20,7 +27,7 @@ export const ProductQuantityInAllBranches = (props) => {
       const res = await api.get(path);
       setData(res.data);
       let entryQuantities = 0;
-      res.data.forEach(element => entryQuantities += element.entryQuantity);
+      res.data.forEach(element => entryQuantities += element.entryQuantity | 0);
       setTotalEntryQuantities(entryQuantities);
     };
 
@@ -33,31 +40,40 @@ export const ProductQuantityInAllBranches = (props) => {
         width: "100%",
       }}
     >
-      <ul
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          listStyle: "none",
-          padding: "8px 0",
-          margin: "0",
-        }}
-      >
-        <li style={{padding: '3.5px 0', marginLeft: '8px'}}>
-                      Total de Entradas: {totalEntryQuantities}
-         </li>
-            <Divider />
-
+      <div style={{ width: "100%" }}>
+        <Divider />
+        <Typography
+            variant="subtitle2"
+            style={{
+              color: "rgba(0, 0, 0, 0.77)",
+              padding: "8px 0",
+              marginLeft: "8px",
+            }}
+        >
+          Total de Entradas: {totalEntryQuantities | 0}
+        </Typography>
+        <Divider />
+      </div>
+      <Table style={{
+        width: "100%",
+      }}>
+        <TableHead>
+          <TableRow>
+              <TableCell>Loja</TableCell>
+              <TableCell style={{textAlign: 'center'}}>Disponível</TableCell>
+              <TableCell style={{textAlign: 'center'}}>Entradas</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
         {data.map((v) => (
-          <>
-            <li style={{padding: '3.5px 0', marginLeft: '8px'}} key={v.branchId}>
-              Loja {v.branchName} | Disponível: {v.quantity}  | Entradas: {v.entryQuantity}
-            </li>
-            <Divider />
-          </>
+            <TableRow key={v.branchId}>
+                <TableCell>{v.branchName}</TableCell>
+                <TableCell style={{textAlign: 'center'}}>{v.quantity}</TableCell>
+                <TableCell style={{textAlign: 'center'}}>{v.entryQuantity | 0}</TableCell>
+            </TableRow>
         ))}
-      </ul>
+        </TableBody>
+      </Table>
     </div>
   );
 };

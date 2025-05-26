@@ -173,8 +173,8 @@ export default function Checklist({ handleBrancheList }) {
           </div>
         );
         break;
-      default:
-        console.log("nada");
+      // default:
+      //   console.log("nada");
     }
     return component;
   };

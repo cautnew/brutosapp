@@ -1,5 +1,5 @@
 export const formatUserData = (data) => {
-  console.log("@@@ formatUserData @param data", data);
+  // console.log("@@@ formatUserData @param data", data);
   return {
     isAdmin: data.IsAdmin === "True" ? true : false,
     IsCentralStockAdmin: data.IsCentralStockAdmin === "True" ? true : false,

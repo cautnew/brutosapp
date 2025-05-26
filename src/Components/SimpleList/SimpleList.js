@@ -24,10 +24,9 @@ export default function SimpleList({
 }) {
   const classes = useStyles();
   // const [checked, setChecked] = React.useState([0]);
-  console.log("@@@ list", list);
+  // console.log("@@@ list", list);
 
   if (!list || !list.length) return null;
-
   return (
     <List className={classes.root}>
       {list.map(({ id, name }) => {

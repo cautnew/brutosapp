@@ -56,10 +56,10 @@ const useStyles = makeStyles((theme) => ({
 function SimpleTable({ list, colunmList }) {
   const classes = useStyles();
   // const [checked, setChecked] = React.useState([0]);
-  console.log("@@@ list", list);
+  // console.log("@@@ list", list);
 
   if (!list || !list.length) return null;
-  console.log("@@@ SimpleTable");
+  // console.log("@@@ SimpleTable");
   return (
     <TableContainer
       component={Paper}
@@ -204,7 +204,7 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
         setTotalOutQuantity("");
         setContent("list");
       })
-      .catch((err) => console.log("@@@ err", err))
+      .catch((err) => console.error("@@@ err", err))
       .finally(() => setLoading(false));
 
   const handleChangeStartDate = (e) => {
@@ -289,8 +289,8 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
         );
         break;
 
-      default:
-        console.log("nada");
+      // default:
+      //   console.log("nada");
     }
     return component;
   };

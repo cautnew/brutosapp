@@ -38,12 +38,12 @@ const useStyles = makeStyles({
 });
 
 function todayDate() {
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, "0");
-  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-  var yyyy = today.getFullYear();
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, "0");
+  const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  const yyyy = today.getFullYear();
 
-  return (today = yyyy + "-" + mm + "-" + dd);
+  return (yyyy + "-" + mm + "-" + dd);
 }
 
 const COLUMNS_DEFAULT = [
@@ -110,7 +110,7 @@ export default function Stock({
         .then(({ data }) =>
           setItems(data.map((e) => ({ ...e, confirmEntryQuantity: false })))
         )
-        .catch((err) => console.log("@@@", err))
+        .catch((err) => console.error("@@@", err))
         .finally(() => setLoading(false));
     } else {
       setBranchList(
@@ -136,7 +136,7 @@ export default function Stock({
         .then(({ data }) =>
           setItems(data.map((e) => ({ ...e, confirmEntryQuantity: false })))
         )
-        .catch((err) => console.log("@@@", err))
+        .catch((err) => console.error("@@@", err))
         .finally(() => setLoading(false));
     }
     return () => {};
@@ -190,7 +190,7 @@ export default function Stock({
         .then(({ data }) =>
           setItems(data.map((e) => ({ ...e, confirmEntryQuantity: false })))
         )
-        .catch((err) => console.log("@@@", err))
+        .catch((err) => console.error("@@@", err))
         .finally(() => setLoading(false));
     } else if (value === "checklist") {
       setLoading(true);
@@ -199,7 +199,7 @@ export default function Stock({
         .then(({ data }) =>
           setChecklist(data.map((e) => ({ ...e, confirmed: false })))
         )
-        .catch((err) => console.log("@@@", err))
+        .catch((err) => console.error("@@@", err))
         .finally(() => setLoading(false));
     }
 
@@ -255,7 +255,7 @@ export default function Stock({
       .then(({ data }) =>
         setItems(data.map((e) => ({ ...e, confirmEntryQuantity: false })))
       )
-      .catch((err) => console.log("@@@", err))
+      .catch((err) => console.error("@@@", err))
       .finally(() => setLoading(false));
     setBranchId(value);
   };
@@ -302,7 +302,7 @@ export default function Stock({
 
         getContent("list");
       })
-      .catch((err) => console.log("@@@ err", err))
+      .catch((err) => console.error("@@@ err", err))
       .finally((err) => setLoading(false));
   };
 
@@ -368,7 +368,7 @@ export default function Stock({
       .then(({ data }) => {
         getContent("list");
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
       .finally((err) => setLoading(false));
   };
 
@@ -492,7 +492,7 @@ export default function Stock({
                               }))
                             )
                           )
-                          .catch((err) => console.log("@@@", err))
+                          .catch((err) => console.error("@@@", err))
                           .finally(() => setLoading(false));
                       }}
                       startIcon={<Search />}
@@ -940,7 +940,7 @@ export default function Stock({
             entryQuantity: format(data.entryQuantity),
           })
         )
-        .catch((err) => console.log(err))
+        .catch((err) => console.error(err))
         .finally(() => setLoading(false));
     } else {
       setProduct(items.find((e) => e.id == id));
@@ -984,6 +984,22 @@ export default function Stock({
 function DenseTable({ colunms, rows, setRowSelected, lineButton }) {
   const classes = useStyles();
 
+  const txtQtdProducts = (quantity) => {
+    if (quantity === undefined) {
+      return 0;
+    }
+
+    const numberOfBreadsPerPack = 8;
+    const numberOfPacks = Math.floor(quantity / numberOfBreadsPerPack);
+    const modNumberOfPacks = quantity % numberOfBreadsPerPack;
+
+    if (modNumberOfPacks > 0) {
+      return `${quantity} (${numberOfPacks}/${modNumberOfPacks})`;
+    }
+
+    return `${quantity} (${numberOfPacks})`;
+  };
+
   return (
     <Container
       masWidth="lg"
@@ -1021,31 +1037,37 @@ function DenseTable({ colunms, rows, setRowSelected, lineButton }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              button={lineButton}
-              hover
-              onClick={lineButton ? (e) => setRowSelected(row.id) : null}
-              key={row.id}
-            >
-              {colunms.map((e, i) => (
-                <TableCell
-                  key={i}
-                  component="th"
-                  scope="row"
-                  align={
-                    i === 0
-                      ? "left"
-                      : i === colunms.length - 1
-                      ? "right"
-                      : "center"
-                  }
+          {rows.map((row) => {
+            const isPackOfBread = row.productName.toString().toUpperCase().includes("PÃO");
+            return (
+                <TableRow
+                    button={lineButton}
+                    hover
+                    onClick={lineButton ? (e) => setRowSelected(row.id) : null}
+                    key={row.id}
                 >
-                  {row[e.key]}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
+                  {colunms.map((e, i) => {
+                    const valCell = row[e.key] === undefined ? 0 : row[e.key];
+                    return (
+                        <TableCell
+                            key={i}
+                            component="th"
+                            scope="row"
+                            align={
+                              i === 0
+                                  ? "left"
+                                  : i === colunms.length - 1
+                                      ? "right"
+                                      : "center"
+                            }
+                        >
+                          {isPackOfBread && i > 0 ? txtQtdProducts(valCell) : valCell}
+                        </TableCell>
+                    )
+                  })}
+                </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
     </Container>

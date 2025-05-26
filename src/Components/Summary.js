@@ -153,7 +153,7 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
       </MenuItem>
     ));
   })(Object.keys(searchTypes));
-  console.log("getPreviousDay", getPreviousDay());
+  // console.log("getPreviousDay", getPreviousDay());
   return (
     <>
       {loading ? (

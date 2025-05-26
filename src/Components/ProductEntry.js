@@ -75,7 +75,7 @@ const ProductEntry = ({ branchs, isAdmin, isCentralStockAdmin }) => {
 
     setLoading(false);
   };
-  console.log(entrys, !!entrys.length);
+  // console.log(entrys, !!entrys.length);
 
   const handleChangeBranchId = (e) => {
     const { value } = e.target;
