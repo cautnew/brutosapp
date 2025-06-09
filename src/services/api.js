@@ -3,6 +3,7 @@ import { getToken } from "./auth";
 
 const api = axios.create({
   baseURL: "https://danielbrutos-001-site1.ftempurl.com/api",
+  // baseURL: "http://localhost:8000/api",
   headers: {
     "Content-type": "application/json",
     "Access-Control-Allow-Origin": "*",

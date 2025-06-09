@@ -154,6 +154,26 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
     ));
   })(Object.keys(searchTypes));
   // console.log("getPreviousDay", getPreviousDay());
+  const txtQtdProducts = (quantity, isPackOfBread=false) => {
+    if (quantity === undefined) {
+      return 0;
+    }
+
+    if (!isPackOfBread) {
+      return quantity;
+    }
+
+    const numberOfBreadsPerPack = 8;
+    const numberOfPacks = Math.floor(quantity / numberOfBreadsPerPack);
+    const modNumberOfPacks = quantity % numberOfBreadsPerPack;
+
+    if (modNumberOfPacks > 0) {
+      return `${quantity} (${numberOfPacks}/${modNumberOfPacks})`;
+    }
+
+    return `${quantity} (${numberOfPacks})`;
+  };
+
   return (
     <>
       {loading ? (
@@ -306,26 +326,29 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {summary.map((item) => (
-                      <TableRow key={item.name}>
-                        <TableCell component="th" scope="row">
-                          <Typography variant="subtitle3">
-                            {item.productName}
-                          </Typography>
-                        </TableCell>
-                        {branchList.map((branch) => (
-                          <TableCell>
-                            <Typography variant="subtitle3">
-                              {Object.keys(item.branchValues).includes(
-                                branch.id
-                              )
-                                ? item.branchValues[branch.id]
-                                : "-"}
-                            </Typography>
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
+                    {summary.map((item) => {
+                      const isPackOfBread = item.productName.toString().toUpperCase().includes("PÃO");
+                      return (
+                          <TableRow key={item.name}>
+                            <TableCell component="th" scope="row">
+                              <Typography variant="subtitle3">
+                                {item.productName}
+                              </Typography>
+                            </TableCell>
+                            {branchList.map((branch) => (
+                                <TableCell>
+                                  <Typography variant="subtitle3">
+                                    {Object.keys(item.branchValues).includes(
+                                        branch.id
+                                    )
+                                        ? txtQtdProducts(item.branchValues[branch.id] || 0, isPackOfBread)
+                                        : 0}
+                                  </Typography>
+                                </TableCell>
+                            ))}
+                          </TableRow>
+                      )
+                    })}
                   </TableBody>
                 </Table>
               ) : null}

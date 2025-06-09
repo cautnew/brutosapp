@@ -1004,7 +1004,6 @@ function DenseTable({ colunms, rows, setRowSelected, lineButton }) {
     <Container
       masWidth="lg"
       style={{
-        padding: "0",
         marginTop: "24px",
         width: "100%",
         overflowX: "auto",
