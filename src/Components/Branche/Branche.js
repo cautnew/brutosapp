@@ -9,7 +9,6 @@ import { CircularProgress, Container } from "@material-ui/core";
 export default function Branches({ handleBrancheList }) {
   const [brancheList, setBrancheList] = useState([]);
   const [branche, setBranche] = useState({ name: "" });
-  const [name, setName] = useState("");
   const [content, setContent] = useState("list");
   const [loading, setLoading] = useState(false);
   const [startHour, setStartHour] = useState("");

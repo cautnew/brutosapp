@@ -199,7 +199,7 @@ function AppBarBranche({
             color="secondary"
             style={{ color: "rgba(0, 0, 0, 0.87)" }}
           >
-            Brutos Controle de Estoque
+            Controle de Estoque
           </Typography>
         </Toolbar>
 
@@ -467,7 +467,9 @@ export default function HomePage() {
               }}
               open={matches}
             >
-              <div className={classes.toolbarIcon}></div>
+              <div className={classes.toolbarIcon}>
+                <h5>Brutos</h5>
+              </div>
               <Divider />
               <List style={{ marginTop: "32px", height: "100%" }}>
                 <div

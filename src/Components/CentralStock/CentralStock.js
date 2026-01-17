@@ -264,16 +264,13 @@ export default function CentralStock() {
                         value={productId}
                         name="productId"
                         label="Produto"
-                        value={productId}
                         onChange={(e) => {
                           setProductId(e.target.value);
                         }}
-                        name="product"
                         variant="outlined"
                         required
                         fullWidth
                         id="productId"
-                        label="Produto"
                         autoFocus
                       >
                         {productsList.map((e) => (
@@ -458,16 +455,13 @@ export default function CentralStock() {
                 value={productId}
                 name="productId"
                 label="Produto"
-                value={productId}
                 onChange={(e) => {
                   handleChangeProduct(e.target.value);
                 }}
-                name="product"
                 variant="outlined"
                 required
                 fullWidth
                 id="productId"
-                label="Produto"
                 autoFocus
               >
                 {productsList.map((e) => (
@@ -581,16 +575,13 @@ export default function CentralStock() {
                       value={productId}
                       name="productId"
                       label="Produto"
-                      value={productId}
                       onChange={(e) => {
                         handleChangeProduct(e.target.value);
                       }}
-                      name="product"
                       variant="outlined"
                       required
                       fullWidth
                       id="productId"
-                      label="Produto"
                       autoFocus
                     >
                       {productsList.map((e) => (
