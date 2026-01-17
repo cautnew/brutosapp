@@ -24,6 +24,7 @@ import {
 import searchImg from "../assets/search-in-list-96.png";
 import { setDate } from "date-fns";
 import { SearchOutlined } from "@material-ui/icons";
+import { use } from "react";
 
 const useStyles = makeStyles({
   root: {
@@ -67,6 +68,7 @@ const searchTypes = {
   ["ByDifferenceQuantity"]: "Quantidade de diferença",
   ["ByFinalQuantity"]: "Quantidade final",
   ["ByMissingQuantity"]: "O que comprar",
+  ["OrderSummary"]: "Resumo de pedidos",
 };
 
 function getPreviousDay(date = new Date()) {
@@ -93,6 +95,8 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState(null);
   const [summary, setSummary] = useState([]);
+  const [templateTable, setTemplateTable] = useState(null);
+  const [isAllBrandsTemplate, setIsAllBrandsTemplate] = useState(null);
   const [date, setDate] = useState(todayDate());
   const [researchQuantity, setResearchQuantity] = useState(0);
 
@@ -116,189 +120,60 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
 
   const getSummary = () => {
     setLoading(true);
+    if (type === null) return;
+
+    if (type === "OrderSummary") {
+      api
+        .get(`/products/reports/summary?type=ByMissingQuantity&day=${date}`)
+        .then(({ data }) => {
+          if (!data.length) setResearchQuantity((prevState) => ++prevState);
+          else {
+            for (let i = 0; i < data.length; i++) {
+              const branches = Object.keys(data[i].branchValues);
+              branches.forEach((branchId) => {
+                if (data[i].branchValues['total'] === undefined) {
+                  data[i].branchValues['total'] = 0;
+                }
+                data[i].branchValues['total'] += data[i].branchValues[branchId];
+              });
+            }
+            setTemplateTable((
+              <div style={{display: "grid", gridTemplateColumns: "repeat(3, 1fr)", width: "100%"}}>
+                {[{id: 'total', name: 'Total'}, ...branchList].map((branch) => (
+                  <table border="0" style={{ borderCollapse: "collapse", margin: "10px" }}>
+                    <thead>
+                      <tr>
+                        <th colspan="2">{branch.name}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.map((item) => (
+                        <tr>
+                          <td style={{ padding: "8px", border: "1px solid #ddd" }}>
+                            {item.productName}
+                          </td>
+                          <td style={{ padding: "8px", border: "1px solid #ddd" }}>
+                            {item.branchValues[branch.id] || 0}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ))}
+              </div>));
+            setLoading(false);
+          }
+        })
+        .catch((err) => new Error("line90"));
+      return;
+    }
+
     api
       .get(`/products/reports/summary?type=${type}&day=${date}`)
       .then(({ data }) => {
         if (!data.length) setResearchQuantity((prevState) => ++prevState);
         else {
-          setSummary(data);
-          setLoading(false);
-        }
-      })
-      .catch((err) => new Error("line90"));
-  };
-
-  const fetchSummaryWhileEmpty = (myTimeout) => {
-    setLoading(true);
-    api
-      .get(`/products/reports/summary?type=${type}&day=${date}`)
-      .then(({ data }) => {
-        if (!data.length) setResearchQuantity((prevState) => ++prevState);
-        else {
-          setSummary(data);
-          clearTimeout(myTimeout);
-          setLoading(false);
-        }
-      });
-  };
-
-  const searchTypeFilterOptions = ((searchTypeKeys) => {
-    const optionsKey = isCentralStockAdmin
-      ? searchTypeKeys.filter((key) => key !== "ByDifferenceQuantity")
-      : searchTypeKeys;
-
-    return optionsKey.map((key) => (
-      <MenuItem key={key} value={key}>
-        {searchTypes[key]}
-      </MenuItem>
-    ));
-  })(Object.keys(searchTypes));
-  // console.log("getPreviousDay", getPreviousDay());
-  const txtQtdProducts = (quantity, isPackOfBread=false) => {
-    if (quantity === undefined) {
-      return 0;
-    }
-
-    if (!isPackOfBread) {
-      return quantity;
-    }
-
-    const numberOfBreadsPerPack = 8;
-    const numberOfPacks = Math.floor(quantity / numberOfBreadsPerPack);
-    const modNumberOfPacks = quantity % numberOfBreadsPerPack;
-
-    if (modNumberOfPacks > 0) {
-      return `${quantity} (${numberOfPacks}/${modNumberOfPacks})`;
-    }
-
-    return `${quantity} (${numberOfPacks})`;
-  };
-
-  return (
-    <>
-      {loading ? (
-        <LinearDeterminate />
-      ) : (
-        <Container>
-          <Typography variant="h6" style={{ margin: "10px 0" }}>
-            Resumo
-          </Typography>
-
-          <div
-            style={{
-              display: "flex",
-              marginBottom: "1rem",
-              flexWrap: "wrap",
-            }}
-          >
-            <FormControl
-              variant="outlined"
-              size="small"
-              style={{
-                minWidth: "10rem",
-                maxWidth: "20rem",
-                marginRight: "8px",
-                paddingBottom: "16px",
-              }}
-              fullWidth
-            >
-              <InputLabel id="demo-simple-select-outlined-label">
-                Buscar por
-              </InputLabel>
-              <Select
-                value={type}
-                name="productId"
-                label="Buscar por"
-                onChange={(e) => {
-                  setType(e.target.value);
-                }}
-                placeholder="Selecione o tipo de busca"
-                variant="outlined"
-                required
-              >
-                {searchTypeFilterOptions}
-              </Select>
-            </FormControl>
-
-            {isCentralStockAdmin ? (
-              <FormControl
-                variant="outlined"
-                size="small"
-                style={{
-                  minWidth: "10rem",
-                  maxWidth: "20rem",
-                  marginRight: "8px",
-                  paddingBottom: "16px",
-                }}
-                fullWidth
-              >
-                <InputLabel id="demo-simple-select-outlined-label">
-                  Dia
-                </InputLabel>
-                <Select
-                  value={date}
-                  label="Dia"
-                  onChange={(e) => {
-                    setDate(e.target.value);
-                  }}
-                  variant="outlined"
-                  required
-                >
-                  <MenuItem value={todayDate()}>Hoje</MenuItem>
-                  <MenuItem value={getPreviousDay()}>Ontem</MenuItem>
-                </Select>
-              </FormControl>
-            ) : (
-              <TextField
-                value={date}
-                size="small"
-                onChange={(e) => setDate(e.target.value)}
-                variant="outlined"
-                required
-                id="date"
-                label="Data"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            )}
-          </div>
-
-          <Button
-            style={{
-              marginBottom: "16px",
-            }}
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={() => getSummary()}
-            disabled={!type}
-          >
-            <SearchOutlined />
-            Buscar
-          </Button>
-          {!type ? (
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                marginLeft: "-24px",
-                justifyContent: "center",
-                position: "absolute",
-                top: "50%",
-                transform: "translate(0, -50%)",
-              }}
-            >
-              <img
-                src={searchImg}
-                width="100"
-                height={100}
-                alt="Search illustration"
-                style={{ color: "white" }}
-              />
-            </div>
-          ) : (
+          setTemplateTable((
             <TableContainer
               component={Paper}
               style={{
@@ -353,9 +228,189 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
                 </Table>
               ) : null}
             </TableContainer>
-          )}
-        </Container>
-      )}
+          ));
+          setSummary(data);
+          setLoading(false);
+        }
+      })
+      .catch((err) => new Error("line90"));
+  };
+
+  const fetchSummaryWhileEmpty = (myTimeout) => {
+    setLoading(true);
+    api
+      .get(`/products/reports/summary?type=${type}&day=${date}`)
+      .then(({ data }) => {
+        if (!data.length) setResearchQuantity((prevState) => ++prevState);
+        else {
+          setSummary(data);
+          clearTimeout(myTimeout);
+          setLoading(false);
+        }
+      });
+  };
+
+  const searchTypeFilterOptions = ((searchTypeKeys) => {
+    const optionsKey = isCentralStockAdmin
+      ? searchTypeKeys.filter((key) => key !== "ByDifferenceQuantity")
+      : searchTypeKeys;
+
+    return optionsKey.map((key) => (
+      <MenuItem key={key} value={key}>
+        {searchTypes[key]}
+      </MenuItem>
+    ));
+  })(Object.keys(searchTypes));
+
+  const txtQtdProducts = (quantity, isPackOfBread=false) => {
+    if (quantity === undefined) {
+      return 0;
+    }
+
+    if (!isPackOfBread) {
+      return quantity;
+    }
+
+    const numberOfBreadsPerPack = 8;
+    const numberOfPacks = Math.floor(quantity / numberOfBreadsPerPack);
+    const modNumberOfPacks = quantity % numberOfBreadsPerPack;
+
+    if (modNumberOfPacks > 0) {
+      return `${quantity} (${numberOfPacks}/${modNumberOfPacks})`;
+    }
+
+    return `${quantity} (${numberOfPacks})`;
+  };
+
+  const principalContainer = (
+    <Container>
+      <Typography variant="h6" style={{ margin: "10px 0" }}>
+        Resumo
+      </Typography>
+
+      <div
+        style={{
+          display: "flex",
+          marginBottom: "1rem",
+          flexWrap: "wrap",
+        }}
+      >
+        <FormControl
+          variant="outlined"
+          size="small"
+          style={{
+            minWidth: "10rem",
+            maxWidth: "20rem",
+            marginRight: "8px",
+            paddingBottom: "16px",
+          }}
+          fullWidth
+        >
+          <InputLabel id="demo-simple-select-outlined-label">
+            Buscar por
+          </InputLabel>
+          <Select
+            value={type}
+            name="productId"
+            label="Buscar por"
+            onChange={(e) => {
+              setType(e.target.value);
+            }}
+            placeholder="Selecione o tipo de busca"
+            variant="outlined"
+            required
+          >
+            {searchTypeFilterOptions}
+          </Select>
+        </FormControl>
+
+        {isCentralStockAdmin ? (
+          <FormControl
+            variant="outlined"
+            size="small"
+            style={{
+              minWidth: "10rem",
+              maxWidth: "20rem",
+              marginRight: "8px",
+              paddingBottom: "16px",
+            }}
+            fullWidth
+          >
+            <InputLabel id="demo-simple-select-outlined-label">
+              Dia
+            </InputLabel>
+            <Select
+              value={date}
+              label="Dia"
+              onChange={(e) => {
+                setDate(e.target.value);
+              }}
+              variant="outlined"
+              required
+            >
+              <MenuItem value={todayDate()}>Hoje</MenuItem>
+              <MenuItem value={getPreviousDay()}>Ontem</MenuItem>
+            </Select>
+          </FormControl>
+        ) : (
+          <TextField
+            value={date}
+            size="small"
+            onChange={(e) => setDate(e.target.value)}
+            variant="outlined"
+            required
+            id="date"
+            label="Data"
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        )}
+      </div>
+
+      <Button
+        style={{
+          marginBottom: "16px",
+        }}
+        variant="contained"
+        color="primary"
+        size="small"
+        onClick={() => getSummary()}
+        disabled={!type}
+      >
+        <SearchOutlined />
+        Buscar
+      </Button>
+      { !type ? (
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            marginLeft: "-24px",
+            justifyContent: "center",
+            position: "absolute",
+            top: "50%",
+            transform: "translate(0, -50%)",
+          }}
+        >
+          <img
+            src={searchImg}
+            width="100"
+            height={100}
+            alt="Search illustration"
+            style={{ color: "white" }}
+          />
+        </div>
+      ) : templateTable }
+    </Container>
+  );
+
+  return (
+    <>
+      {loading ? (
+        <LinearDeterminate />
+      ) : principalContainer}
     </>
   );
 };
