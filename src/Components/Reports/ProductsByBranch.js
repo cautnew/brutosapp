@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Divider, Typography } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -130,37 +130,8 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
 
   const { handleChangeErrorState } = React.useContext(ErrorContext);
 
-  useEffect(() => {
-    setContent("list");
+  const searchProductsBybranch = useCallback(() => {
     setLoading(true);
-    if(isAdmin) {
-      api
-        .get("/branchs")
-        .then(({ data }) => {
-          setBranchList(data);
-          setBranchId(data[0].id);
-        })
-        .then(() => searchProductsBybranch())
-        .finally(() => setLoading(false));
-    } else {
-      setBranchList(
-        branchs.map((e) => ({
-          name: e.CompanyBranchName,
-          id: e.CompanyBranchId,
-        }))
-      );
-      setBranchId(branchs[0].CompanyBranchId);
-    }
-    setLoading(false);
-    return () => {};
-  }, []);
-
-  const handleChangeBranchId = (e) => {
-    const { value } = e.target;
-    setBranchId(value);
-  };
-
-  const loadProductsByBranch = () =>
     api
       .get(
         `reports?branchId=${branchId}&startDate=${
@@ -206,6 +177,37 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
       })
       .catch((err) => console.error("@@@ err", err))
       .finally(() => setLoading(false));
+  }, [branchId, startDate, endDate]);
+
+  useEffect(() => {
+    setContent("list");
+    setLoading(true);
+    if(isAdmin) {
+      api
+        .get("/branchs")
+        .then(({ data }) => {
+          setBranchList(data);
+          setBranchId(data[0].id);
+        })
+        .then(() => searchProductsBybranch())
+        .finally(() => setLoading(false));
+    } else {
+      setBranchList(
+        branchs.map((e) => ({
+          name: e.CompanyBranchName,
+          id: e.CompanyBranchId,
+        }))
+      );
+      setBranchId(branchs[0].CompanyBranchId);
+    }
+    setLoading(false);
+    return () => {};
+  }, [branchs, isAdmin, searchProductsBybranch]);
+
+  const handleChangeBranchId = (e) => {
+    const { value } = e.target;
+    setBranchId(value);
+  };
 
   const handleChangeStartDate = (e) => {
     setStartDate(e.target.value);
@@ -230,11 +232,6 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
         setContent("replacement");
       })
       .finally(() => setLoading(false));
-  };
-
-  const searchProductsBybranch = (_) => {
-    setLoading(true);
-    loadProductsByBranch();
   };
 
   const getContentComponent = (value) => {

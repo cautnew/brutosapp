@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import api from "../services/api";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -95,6 +95,20 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
   const [date, setDate] = useState(todayDate());
   const [researchQuantity, setResearchQuantity] = useState(0);
 
+  const fetchSummaryWhileEmpty = useCallback((myTimeout) => {
+    setLoading(true);
+    api
+      .get(`/products/reports/summary?type=${type}&day=${date}`)
+      .then(({ data }) => {
+        if (!data.length) setResearchQuantity((prevState) => ++prevState);
+        else {
+          setSummary(data);
+          clearTimeout(myTimeout);
+          setLoading(false);
+        }
+      });
+  }, [type, date]);
+
   useEffect(() => {
     if (researchQuantity) {
       const myTimeout = setTimeout(
@@ -102,7 +116,7 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
         50000
       );
     }
-  }, [researchQuantity]);
+  }, [researchQuantity, fetchSummaryWhileEmpty]);
 
   const branchList = React.useMemo(
     () =>
@@ -229,20 +243,6 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
         }
       })
       .catch((err) => new Error("line90"));
-  };
-
-  const fetchSummaryWhileEmpty = (myTimeout) => {
-    setLoading(true);
-    api
-      .get(`/products/reports/summary?type=${type}&day=${date}`)
-      .then(({ data }) => {
-        if (!data.length) setResearchQuantity((prevState) => ++prevState);
-        else {
-          setSummary(data);
-          clearTimeout(myTimeout);
-          setLoading(false);
-        }
-      });
   };
 
   const searchTypeFilterOptions = ((searchTypeKeys) => {

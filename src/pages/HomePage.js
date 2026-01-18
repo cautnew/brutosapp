@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -166,9 +166,6 @@ function AppBarBranche({
   const classes = useStylesHeader();
   const [openModal, setOpenModal] = React.useState(false);
 
-  const handleChangeBranche = (e) => {
-    setBranche(brancheList.find((b) => b.CompanyBranchId === e.target.value));
-  };
   return (
     <AppBar
       className={classes.root}
@@ -287,7 +284,7 @@ export default function HomePage() {
   const classes = useStyles();
   const matches = useMediaQuery("(min-width:600px)");
 
-  const [open, setOpen] = React.useState(true);
+  const [open] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
   const [openDrawerMobile, setOpenDrawerMobile] = React.useState(true);
   const [userConfig, setUserConfig] = React.useState(false);
@@ -300,9 +297,18 @@ export default function HomePage() {
   } = React.useContext(UserContext);
   const [menu, setMenu] = React.useState(MENU_LIST[4]);
 
+  const handleChangeUserConfig = useCallback((value) => {
+    const userModuleList = getUserModuleList(value);
+    setMenu(userModuleList[0].value);
+    setModuleList(userModuleList);
+    setUserConfig(value);
+    setLoading(false);
+    handleChangeState(value);
+  }, [handleChangeState]);
+
   React.useEffect(() => {
     handleChangeUserConfig(formatUserData(parseJwt(getToken())));
-  }, []);
+  }, [handleChangeUserConfig]);
 
   const handleChangeBranche = (value) => {
     setUserConfig((prevState) => ({ ...prevState, currentBranche: value }));
@@ -318,15 +324,6 @@ export default function HomePage() {
     // console.log("@@@ category", value);
     // setCategory(value);
     // handleChangeBranchesContext(value);
-  };
-
-  const handleChangeUserConfig = (value) => {
-    const userModuleList = getUserModuleList(value);
-    setMenu(userModuleList[0].value);
-    setModuleList(userModuleList);
-    setUserConfig(value);
-    setLoading(false);
-    handleChangeState(value);
   };
 
   const list = (anchor, items) => (

@@ -32,7 +32,7 @@ export const ProductQuantityInAllBranches = (props) => {
     };
 
     productId && getQuantityOfAProductInAllBranches();
-  }, [productId]);
+  }, [productId, startDate, endDate]);
 
   return (
     <div

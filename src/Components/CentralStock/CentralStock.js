@@ -107,7 +107,7 @@ export default function CentralStock() {
         setLoading(false);
       });
     return () => {};
-  }, []);
+  }, [showHide]);
 
   const handleChangeContent = (value) => {
     if (value === "list") {

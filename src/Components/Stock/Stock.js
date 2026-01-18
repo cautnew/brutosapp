@@ -139,12 +139,12 @@ export default function Stock({
         .finally(() => setLoading(false));
     }
     return () => {};
-  }, []);
+  }, [IsCentralStockAdmin, isAdmin, branchsPermissions]);
 
   useEffect(() => {
     if (isAdmin || IsCentralStockAdmin) setColunms(COLUMNS_ADMIN);
     else setColunms(getColumnsByPermissions(branchsPermissions[0].Permissions));
-  }, [isAdmin, branchsPermissions]);
+  }, [IsCentralStockAdmin, isAdmin, branchsPermissions]);
 
   const getContent = (value) => {
     if (value === "end_stock") {

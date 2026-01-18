@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Container, Divider, Typography } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -172,9 +172,21 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
   //   products: [],
   // });
 
+  const loadNotes = useCallback(() => {
+    api
+      .get(`notes?StartDate=${startDate}&EndDate=${endDate}`)
+      .then(({ data }) => {
+        setNotesList(data);
+      })
+      .catch((err) => console.error("@@@ err", err))
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [startDate, endDate]);
+
   React.useEffect(() => {
     loadNotes();
-  }, []);
+  }, [loadNotes]);
 
   const loadProducts = () =>
     api
@@ -268,18 +280,6 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
         handleChangeContent("list");
       })
       .finally(() => setLoading(false));
-  };
-
-  const loadNotes = () => {
-    api
-      .get(`notes?StartDate=${startDate}&EndDate=${endDate}`)
-      .then(({ data }) => {
-        setNotesList(data);
-      })
-      .catch((err) => console.error("@@@ err", err))
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
   const handleCreateNoteProduct = () => {
@@ -881,22 +881,6 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
                   </Button>
                 ) : null}
               </div>
-              {/* {!merchandiseList.length && (
-                    <Typography
-                      variant="subtitle1"
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: "50px",
-                        marginBottom: "8px",
-                        color: "#ff844c",
-                      }}
-                    >
-                      Adicione a primeira mercadoria
-                    </Typography>
-                  )} */}
             </>
           ) : null}
           {getContentComponent(content)}

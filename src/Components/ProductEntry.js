@@ -60,7 +60,7 @@ const ProductEntry = ({ branchs, isAdmin, isCentralStockAdmin }) => {
     }
     setLoading(false);
     return () => {};
-  }, []);
+  }, [branchs, isAdmin]);
 
   const openPdf = (branchId, date) => {
     window.location.href = `https://danielbrutos-001-site1.ftempurl.com/api/products/entries/print?branchId=${branchId}&day=${date}`;
