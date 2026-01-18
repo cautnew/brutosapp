@@ -114,7 +114,7 @@ export default function SignUp({
 
     const data = {
       branchId,
-      branchName: branchList.find((elem) => elem.id == branchId).name,
+      branchName: branchList.find((elem) => elem.id === branchId).name,
       minQuantity,
     };
 
@@ -141,7 +141,7 @@ export default function SignUp({
   };
   const handleDeleteBranch = (branchId) => {
     setBranchListSelected((prevState) =>
-      prevState.filter((e) => e.branchId != branchId)
+      prevState.filter((e) => e.branchId !== branchId)
     );
   };
 
@@ -246,7 +246,7 @@ export default function SignUp({
                   Filial
                 </InputLabel>
                 <Select
-                  disabled={branchList.length == 0}
+                  disabled={branchList.length === 0}
                   value={branchId}
                   onChange={handleChangeBranchId}
                   name="companyBranchId"

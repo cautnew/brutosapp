@@ -43,7 +43,6 @@ import "./HomePage.css";
 
 import { getToken, parseJwt, logout } from "../services/auth";
 import { formatUserData } from "../services/format";
-import { ArrowRightRounded, ListAlt } from "@material-ui/icons";
 import { Button, IconButton, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import ProductEntry from "../Components/ProductEntry";
@@ -293,22 +292,17 @@ export default function HomePage() {
   const [openDrawerMobile, setOpenDrawerMobile] = React.useState(true);
   const [userConfig, setUserConfig] = React.useState(false);
   const [moduleList, setModuleList] = React.useState([]);
-  const { state, handleChangeErrorState, onClose } =
+  const { state, onClose } =
     React.useContext(ErrorContext);
   const {
     handleChangeState,
     handleChangeBranches: handleChangeBranchesContext,
   } = React.useContext(UserContext);
   const [menu, setMenu] = React.useState(MENU_LIST[4]);
-  const [category, setCategory] = React.useState([]);
 
   React.useEffect(() => {
     handleChangeUserConfig(formatUserData(parseJwt(getToken())));
   }, []);
-
-  const handleChangeDrawerOpen = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
 
   const handleChangeBranche = (value) => {
     setUserConfig((prevState) => ({ ...prevState, currentBranche: value }));
@@ -322,7 +316,7 @@ export default function HomePage() {
 
   const handleChangeCategory = (value) => {
     // console.log("@@@ category", value);
-    setCategory(value);
+    // setCategory(value);
     // handleChangeBranchesContext(value);
   };
 
@@ -386,12 +380,10 @@ export default function HomePage() {
   );
 
   const getContentComponent = (selected) => {
-    // console.log("@@@ selected", selected);
     const module = selected;
     switch (module) {
       case "central_stock":
         return <CentralStock />;
-        break;
       case "stock":
         return (
           <Stock
@@ -400,19 +392,14 @@ export default function HomePage() {
             branchs={userConfig.branches}
           />
         );
-        break;
       case "branches":
         return <Branches handleBrancheList={handleChangeBranches} />;
-        break;
       case "category":
         return <Category handleCategory={handleChangeCategory} />;
-        break;
       case "products":
         return <Products />;
-        break;
       case "users":
         return <Users />;
-        break;
       case "invoices":
         return (
           <Grades
@@ -420,7 +407,6 @@ export default function HomePage() {
             isCentralStockAdmin={userConfig.IsCentralStockAdmin}
           />
         );
-        break;
       case "reports":
         return (
           <ProductsByBranch
@@ -428,7 +414,6 @@ export default function HomePage() {
             isAdmin={userConfig.isAdmin}
           />
         );
-        break;
       case "checklist":
         return <Checklist />;
       case "product_entry":
@@ -447,7 +432,9 @@ export default function HomePage() {
             isCentralStockAdmin={userConfig.IsCentralStockAdmin}
           />
         );
-        break;
+      default:
+        console.warn("No content to show");
+        return null;
     }
   };
 
@@ -464,11 +451,13 @@ export default function HomePage() {
                   !open && classes.drawerPaperClose,
                   classes.paper
                 ),
+
               }}
+              style={{ backgroundColor: "red" }}
               open={matches}
             >
-              <div className={classes.toolbarIcon}>
-                <h5>Brutos</h5>
+              <div className={ classes.toolbarIcon }>
+                <img src="/logo-brutos.jpg" alt="Logo" style={{ width: "40px", height: "40px", marginRight: "10px", borderRadius: '5px' }} /><h2>Brutos</h2>
               </div>
               <Divider />
               <List style={{ marginTop: "32px", height: "100%" }}>

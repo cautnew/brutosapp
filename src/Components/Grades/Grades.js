@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Divider, Typography } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import Table from "@material-ui/core/Table";
@@ -27,7 +26,6 @@ import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 import { ErrorContext } from "../../Context/Error/context";
 
 import api from "../../services/api";
-import { setDate } from "date-fns";
 
 function todayDate() {
   var today = new Date();
@@ -164,15 +162,15 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
   const [noteDescription, setNoteDescription] = useState("");
   const [content, setContent] = useState("list");
   const [noteId, setNoteId] = useState("list");
-  const [noteDate, setNotDate] = useState(todayDate());
+  const [noteDate] = useState(todayDate());
   const [totalCreditCardValue, setTotalCreditCardValue] = useState("");
   const [totalDebitCardValue, setTotalDebitCardValue] = useState("");
   const [totalMoneyValue, setTotalMoneyValue] = useState("");
   const [totalPixValue, setTotalPixValue] = useState("");
   const { handleChangeErrorState } = React.useContext(ErrorContext);
-  const [note, setNote] = useState({
-    products: [],
-  });
+  // const [note, setNote] = useState({
+  //   products: [],
+  // });
 
   React.useEffect(() => {
     loadNotes();
@@ -239,10 +237,10 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
 
   const handleChangeContent = (value) => {
     if (value === "list") {
-      setNote({
-        descripton: "",
-        products: [],
-      });
+      // setNote({
+      //   descripton: "",
+      //   products: [],
+      // });
 
       setLoading(true);
       loadNotes();
@@ -254,7 +252,7 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
   const handleDeleteNote = (index) => {
     setLoading(true);
     api
-      .delete(`/notes/${notesList.find((_, i) => i == index).id}`)
+      .delete(`/notes/${notesList.find((_, i) => i === index).id}`)
       .then(async (res) => {
         if (res.status && res.status === 400) {
           const { errors } = await res.json();
@@ -452,33 +450,6 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
                           autoFocus
                         />
                       </Grid>
-                      {/* <Grid item xs={12}>
-                        <TextField
-                          value={noteDate}
-                          onChange={(e) => {
-                            console.log(
-                              "@@@ e.target.value",
-                              Date.parse(e.target.value),
-                              Date.parse(todayDate())
-                            );
-                            if (
-                              Date.parse(e.target.value) >
-                              Date.parse(todayDate())
-                            )
-                              return setNotDate(todayDate());
-                            setNotDate(e.target.value);
-                          }}
-                          autoComplete="fname"
-                          name="noteDate"
-                          variant="outlined"
-                          type="date"
-                          required
-                          fullWidth
-                          id="setNotDate"
-                          label="Data da Nota:"
-                          autoFocus
-                        />
-                      </Grid> */}
                       <Grid item xs={6}>
                         <h3>Mercadorias da nota:</h3>
                       </Grid>
@@ -515,7 +486,7 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
                         hasDeletebutton
                         handleOnClickButtonDelete={(index) =>
                           setNoteProductsList((prevState) =>
-                            prevState.filter((_, i) => i != index)
+                            prevState.filter((_, i) => i !== index)
                           )
                         }
                       />
@@ -637,7 +608,6 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
                               required
                               fullWidth
                               id="productId"
-                              label="Produto"
                               autoFocus
                             >
                               {productsList.map((e) => (
@@ -796,8 +766,8 @@ export default function Grades({ isAdmin, isCentralStockAdmin }) {
       case "delete":
         component = {};
         break;
-      // default:
-      //   console.log("nada");
+      default:
+        console.warn("No content to show");
     }
     return component;
   };

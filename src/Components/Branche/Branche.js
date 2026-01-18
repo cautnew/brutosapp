@@ -377,8 +377,8 @@ export default function Branches({ handleBrancheList }) {
           </div>
         );
         break;
-      // default:
-      //   console.log("nada");
+      default:
+        console.warn("No content to show");
     }
     return component;
   };

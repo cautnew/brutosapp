@@ -5,9 +5,6 @@ import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { makeStyles } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -20,7 +17,6 @@ import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -75,11 +71,11 @@ export default function CentralStock() {
   const [total, setTotal] = useState("");
   const [hide, setHide] = useState(true);
   const [showHide, setShowHide] = useState(false);
-  const [merchandise, setMerchandise] = useState({
-    productId: "",
-    quantity: 0,
-    valueSpended: 0,
-  });
+  // const [merchandise, setMerchandise] = useState({
+  //   productId: "",
+  //   quantity: 0,
+  //   valueSpended: 0,
+  // });
   const [content, setContent] = useState("list");
 
   const userContext = useContext(UserContext);
@@ -115,11 +111,11 @@ export default function CentralStock() {
 
   const handleChangeContent = (value) => {
     if (value === "list") {
-      setMerchandise({
-        productId: "",
-        quantity: "",
-        valueSpended: "",
-      });
+      // setMerchandise({
+      //   productId: "",
+      //   quantity: "",
+      //   valueSpended: "",
+      // });
       setTotal("");
 
       setLoading(true);
@@ -402,8 +398,8 @@ export default function CentralStock() {
       case "delete":
         component = {};
         break;
-      // default:
-      //   console.log("nada");
+      default:
+        console.warn("No content to show");
     }
     return component;
   };

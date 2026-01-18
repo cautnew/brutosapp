@@ -22,9 +22,6 @@ import Divider from "@material-ui/core/Divider";
 
 import api from "../../services/api";
 
-import SimpleList from "../SimpleList/SimpleList";
-import UserContext from "../../Context/User/context";
-
 const PERMISSIONS = [
   { id: "ShowProductsToDelivery", name: "Mostrar produtos para entrega" },
   { id: "UpdateFinalQuantity", name: "Atualizar a quantidade final" },
@@ -79,10 +76,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getPathApi(id) {
-  return `branchs/${id}/categories`;
-}
-
 export default function UsersForm({
   user,
   handleOnClickActionSubmit,
@@ -92,9 +85,7 @@ export default function UsersForm({
   isAdmin,
 }) {
   const classes = useStyles();
-  const { state } = React.useContext(UserContext);
   const [brancheList, setBrancheList] = useState([]);
-  const [brancheInvalidList, setBrancheInvalidList] = useState([]);
   const [brancheId, setBranche] = useState("0");
   const [permissions, setPermissions] = useState([]);
   const [data, setData] = useState({
@@ -202,11 +193,11 @@ export default function UsersForm({
     // setData((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
     // setBranche(brancheList.find(y));;
     if (
-      data.branchs.length != 0 &&
+      data.branchs.length !== 0 &&
       data.branchs.map((e) => e.companyBranchId).includes(e.target.value)
     ) {
       setPermissions(
-        data.branchs.find((elem) => elem.companyBranchId == e.target.value)
+        data.branchs.find((elem) => elem.companyBranchId === e.target.value)
           .permissions
       );
     } else setPermissions([]);
@@ -219,7 +210,7 @@ export default function UsersForm({
     ) {
       const currentData = data;
       const objIndex = currentData.branchs.findIndex(
-        (obj) => obj.companyBranchId == brancheId
+        (obj) => obj.companyBranchId === brancheId
       );
       currentData.branchs.splice(objIndex, 1);
       setData(currentData);
@@ -228,14 +219,14 @@ export default function UsersForm({
   };
 
   const handleChangePermissionBranche = (e) => {
-    if (!permissions.length || brancheId == "0") return;
+    if (!permissions.length || brancheId === "0") return;
 
     if (data.branchs && data.branchs.length) {
       if (data.branchs.map((elem) => elem.companyBranchId).includes(brancheId))
         return setData((prevData) => ({
           ...prevData,
           branchs: prevData.branchs.map((elem) => {
-            if (elem.companyBranchId == brancheId)
+            if (elem.companyBranchId === brancheId)
               return { companyBranchId: brancheId, permissions };
 
             return elem;
@@ -354,7 +345,7 @@ export default function UsersForm({
                       {selected.map((value) => (
                         <Chip
                           key={value}
-                          label={PERMISSIONS.find((e) => e.id == value).name}
+                          label={PERMISSIONS.find((e) => e.id === value).name}
                           className={classes.chip}
                         />
                       ))}
@@ -380,7 +371,7 @@ export default function UsersForm({
             onClick={handleChangePermissionBranche}
           >
             {brancheId &&
-            data.branchs.length != 0 &&
+            data.branchs.length !== 0 &&
             data.branchs.map((e) => e.companyBranchId).includes(brancheId)
               ? "Editar permissão"
               : "Adicionar permissão"}
@@ -416,7 +407,7 @@ export default function UsersForm({
                     <ListItemText
                       primary={
                         brancheList.length &&
-                        brancheList.find((elem) => elem.id == e.companyBranchId)
+                        brancheList.find((elem) => elem.id === e.companyBranchId)
                           .name
                       }
                     />
@@ -425,7 +416,7 @@ export default function UsersForm({
                         <Chip
                           style={{ marginBottom: "8px" }}
                           label={
-                            PERMISSIONS.find((PER) => PER.id == permission).name
+                            PERMISSIONS.find((PER) => PER.id === permission).name
                           }
                         />
                       ))}

@@ -61,7 +61,6 @@ const COLUMNS_ADMIN = [
   { name: "Quantidade do PDV", key: "pdvQuantity" },
   { name: "Diferença de quantidade", key: "differenceQuantity" },
   { name: "Quantidade Anterior", key: "previousQuantity" },
-  // { name: "Quantidade Minima", key: "productMinQuantity" },
 ];
 
 const COLUMNS_PERMISSION_UPDATE_FINAL_QUANTITY = [
@@ -143,36 +142,8 @@ export default function Stock({
   }, []);
 
   useEffect(() => {
-    // const colunmsAdmin = [
-    //   { name: "Produto", key: "productName" },
-    //   { name: "Última atualização", key: "userNameLastUpdate" },
-    //   { name: "Quantidade de Entrada", key: "entryQuantity" },
-    //   { name: "Quantidade Final", key: "finalQuantity" },
-    //   { name: "Quantidade Faltando", key: "missingQuantity" },
-    //   { name: "Quantidade do PDV", key: "pdvQuantity" },
-    //   { name: "Diferença de quantidade", key: "differenceQuantity" },
-    //   { name: "Quantidade Anterior", key: "previousQuantity" },
-    //   { name: "Quantidade Minima", key: "productMinQuantity" },
-    //   { name: "Quantidade de Saída", key: "quantitySold" },
-    // ];
-
     if (isAdmin || IsCentralStockAdmin) setColunms(COLUMNS_ADMIN);
     else setColunms(getColumnsByPermissions(branchsPermissions[0].Permissions));
-    // const columns = [{ name: "Produto", key: "productName" }];
-
-    // if (branchsPermissions[0].Permissions.includes("UpdateFinalQuantity"))
-    //   columns.push(
-    //     { name: "Quantidade Final", key: "finalQuantity" },
-    //     { name: "Quantidade de Entrada", key: "entryQuantity" }
-    //   );
-
-    // if (branchsPermissions[0].Permissions.includes("ShowProductsToDelivery"))
-    //   columns.push({ name: "Quantidade Faltando", key: "missingQuantity" });
-
-    // if (branchsPermissions[0].Permissions.includes("UpdatePdvQuantity"))
-    //   columns.push({ name: "Quantidade do PDV", key: "pdvQuantity" });
-
-    // setColunms(columns);
   }, [isAdmin, branchsPermissions]);
 
   const getContent = (value) => {
@@ -229,24 +200,6 @@ export default function Stock({
         ({ CompanyBranchId }) => CompanyBranchId === value
       ).Permissions;
       setColunms(getColumnsByPermissions(permissions));
-      // const colunms = [
-      //   { name: "Produto", key: "productName" },
-      //   { name: "Quantidade Final", key: "finalQuantity" },
-      //   { name: "Quantidade de Entrada", key: "entryQuantity" },
-      // ];
-      // const colunmsMin = [
-      //   { name: "Produto", key: "productName" },
-      //   { name: "Quantidade de Entrada", key: "entryQuantity" },
-      // ];
-      // if (
-      //   branchsPermissions.find((e) => e.CompanyBranchId == value)
-      //     .Permissions &&
-      //   branchsPermissions
-      //     .find((e) => e.CompanyBranchId == value)
-      //     .Permissions.includes("ShowProductsToDelivery")
-      // )
-      //   setColunms(colunms);
-      // else setColunms(colunmsMin);
     }
 
     setLoading(true);
@@ -312,7 +265,7 @@ export default function Stock({
     const listOfValidatedItems = items.map((item) => {
       let error = false;
       if (
-        (item.finalQuantity != 0 && !item.finalQuantity) ||
+        (item.finalQuantity !== 0 && !item.finalQuantity) ||
         parseInt(item.finalQuantity) < 0
       )
         error = true;
@@ -330,7 +283,7 @@ export default function Stock({
       let messageError = "";
       if (
         !firstItemOnTheListInError.finalQuantity &&
-        firstItemOnTheListInError.finalQuantity != 0
+        firstItemOnTheListInError.finalQuantity !== 0
       )
         messageError =
           "ATENÇÂO: O campo de quantidade final nao pode estar vazio";
@@ -378,13 +331,13 @@ export default function Stock({
     if (
       branchsPermissions.length &&
       branchsPermissions
-        .find((e) => e.CompanyBranchId == branchId)
+        .find((e) => e.CompanyBranchId === branchId)
         .Permissions.includes("UpdateFinalQuantity")
     )
       return false;
     else if (
       branchsPermissions
-        .find((e) => e.CompanyBranchId == branchId)
+        .find((e) => e.CompanyBranchId === branchId)
         .Permissions.includes("UpdatePdvQuantity")
     )
       return true;
@@ -393,7 +346,7 @@ export default function Stock({
   const handleChangeChecklist = (id) => {
     setChecklist((prevState) =>
       prevState.map((state) => {
-        if (state.id == id) return { ...state, confirmed: !state.confirmed };
+        if (state.id === id) return { ...state, confirmed: !state.confirmed };
 
         return state;
       })
@@ -436,14 +389,11 @@ export default function Stock({
                     value={branchId}
                     name="branchId"
                     label="Produto"
-                    value={branchId}
                     onChange={handleChangeBranchId}
-                    name="product"
                     variant="outlined"
+                    id="branchId"
                     required
                     fullWidth
-                    id="branchId"
-                    label="Produto"
                     autoFocus
                   >
                     {branchList.map((e) => (
@@ -466,7 +416,6 @@ export default function Stock({
                         setDate(e.target.value);
                       }}
                       variant="outlined"
-                      required
                       id="date"
                       label="Data"
                       type="date"
@@ -474,6 +423,7 @@ export default function Stock({
                         shrink: true,
                       }}
                       style={{ padding: "9px" }}
+                      required
                     />
                     <Button
                       type="button"
@@ -507,7 +457,7 @@ export default function Stock({
                   branchsPermissions.length &&
                   branchId &&
                   branchsPermissions
-                    .find((e) => e.CompanyBranchId == branchId)
+                    .find((e) => e.CompanyBranchId === branchId)
                     .Permissions.includes("UpdateFinalQuantity"))) && (
                 <div>
                   <Button
@@ -553,7 +503,6 @@ export default function Stock({
                 <>
                   <Grid item xs={12}>
                     <TextField
-                      autoFocus
                       style={{ marginBottom: "16px" }}
                       type="number"
                       value={product.entryQuantity}
@@ -566,10 +515,10 @@ export default function Stock({
                       autoComplete="fname"
                       name="entryQuantity"
                       variant="outlined"
-                      required
-                      fullWidth
                       id="entryQuantity"
                       label="Quantidade de Entrada"
+                      required
+                      fullWidth
                       autoFocus
                     />
                   </Grid>
@@ -587,10 +536,10 @@ export default function Stock({
                       autoComplete="fname"
                       name="finalQuantity"
                       variant="outlined"
-                      required
-                      fullWidth
                       id="finalQuantity"
                       label="Quantidade Final"
+                      required
+                      fullWidth
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -607,10 +556,10 @@ export default function Stock({
                       autoComplete="fname"
                       name="entryQuantity"
                       variant="outlined"
-                      required
-                      fullWidth
                       id="entryQuantity"
                       label="Quantidade Anterior"
+                      required
+                      fullWidth
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -628,10 +577,10 @@ export default function Stock({
                       autoComplete="fUpdatePdvQuantity"
                       name="pdvQuantity"
                       variant="outlined"
-                      required
-                      fullWidth
                       id="pdvQuantity"
                       label="Quantidade do PDV"
+                      required
+                      fullWidth
                     />
                   </Grid>
                 </>
@@ -640,7 +589,6 @@ export default function Stock({
                   {IsCentralStockAdmin && (
                     <Grid item xs={12}>
                       <TextField
-                        autoFocus
                         style={{ marginBottom: "16px" }}
                         type="number"
                         value={product.entryQuantity}
@@ -653,20 +601,20 @@ export default function Stock({
                         autoComplete="fname"
                         name="entryQuantity"
                         variant="outlined"
-                        required
-                        fullWidth
                         id="entryQuantity"
                         label="Quantidade de Entrada"
+                        required
+                        fullWidth
                         autoFocus
                       />
                     </Grid>
                   )}
-                  {branchsPermissions.find((e) => e.CompanyBranchId == branchId)
+                  {branchsPermissions.find((e) => e.CompanyBranchId === branchId)
                     .Permissions &&
-                  branchsPermissions.find((e) => e.CompanyBranchId == branchId)
+                  branchsPermissions.find((e) => e.CompanyBranchId === branchId)
                     .Permissions.length &&
                   branchsPermissions
-                    .find((e) => e.CompanyBranchId == branchId)
+                    .find((e) => e.CompanyBranchId === branchId)
                     .Permissions.includes("UpdatePdvQuantity") ? (
                     <Grid item xs={12}>
                       <TextField
@@ -804,7 +752,6 @@ export default function Stock({
                           id={i}
                           error={elem.error}
                           style={{ maxWidth: "200px" }}
-                          type="number"
                           value={elem.finalQuantity}
                           onChange={(e) =>
                             setItems((prevState) => {
@@ -827,10 +774,9 @@ export default function Stock({
                           autoComplete="fname"
                           name="finalQuantity"
                           variant="standard"
+                          label="Quantidade de final"
                           required
                           fullWidth
-                          // id="finalQuantity"
-                          label="Quantidade de final"
                         />
                         <FormControlLabel
                           control={
@@ -927,7 +873,7 @@ export default function Stock({
   };
 
   const setRowSelected = (id) => {
-    const format = (value) => (value == 0 ? "" : value);
+    const format = (value) => (value === 0 ? "" : value);
     if (isAdmin) {
       setLoading(true);
       api
@@ -943,7 +889,7 @@ export default function Stock({
         .catch((err) => console.error(err))
         .finally(() => setLoading(false));
     } else {
-      setProduct(items.find((e) => e.id == id));
+      setProduct(items.find((e) => e.id === id));
     }
 
     getContent("edit");

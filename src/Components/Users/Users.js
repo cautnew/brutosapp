@@ -3,13 +3,12 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import api from "../../services/api";
 import SimpleTable from "../SimpleTable/SimpleTable";
-import TextField from "@material-ui/core/TextField";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 
 import UserContext from "../../Context/User/context";
 import UsersForm from "../UsersForm/UsersForm";
-import { Add, AddBox } from "@material-ui/icons";
+import { AddBox } from "@material-ui/icons";
 import { CircularProgress } from "@material-ui/core";
 
 function getPathApi(id) {
@@ -78,14 +77,7 @@ export default function Users() {
     handleChangeContent("delete");
   };
 
-  const prodValidation = (value) => {
-    const { name, categoryId, companyBranchId, minQuantity, quantity } = value;
-
-    return true;
-  };
-
   const apiCreate = (value) => {
-    const dataIsValid = prodValidation(value);
     setLoading(true);
     api
       .post(pathApi, {
@@ -99,7 +91,6 @@ export default function Users() {
   };
 
   const apiCreateAdmin = (value) => {
-    const dataIsValid = prodValidation(value);
     setLoading(true);
     api
       .post("users/central-stock-admin", {
@@ -111,7 +102,6 @@ export default function Users() {
   };
 
   const apiEdit = (value) => {
-    const dataIsValid = prodValidation(value);
     setLoading(true);
     api
       .put(`users/${value.id}`, {
@@ -234,8 +224,8 @@ export default function Users() {
           </div>
         );
         break;
-      // default:
-      //   console.log("nada");
+      default:
+        console.warn("No content to show");
     }
     return component;
   };

@@ -10,5 +10,5 @@ app.get("*", (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000, (err) =>
-  err ? console.log(err) : console.log("Sucess!")
+  err ? console.error(err) : console.log("Sucess!")
 );

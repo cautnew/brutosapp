@@ -10,7 +10,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { AddBox, Search } from "@material-ui/icons";
+import { Search } from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -173,14 +173,14 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
           setTotalEntryQuantity(0);
           setTotalOutQuantity(0);
           let currentTotalEntryQuantity = 0;
-          for (var i = 0; i < data.length; i++) {
+          for (let i = 0; i < data.length; i++) {
             const entryQuantity = data[i].entryQuantity;
             if (entryQuantity > 0) {
               currentTotalEntryQuantity += entryQuantity;
             }
           }
           let currentTotalOutQuantity = 0;
-          for (var i = 0; i < data.length; i++) {
+          for (let i = 0; i < data.length; i++) {
             const outQuantity = data[i].outQuantity;
             if (outQuantity > 0) {
               currentTotalOutQuantity += outQuantity;
@@ -289,8 +289,8 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
         );
         break;
 
-      // default:
-      //   console.log("nada");
+      default:
+        console.warn("No content to show");
     }
     return component;
   };
@@ -337,13 +337,11 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
                       value={branchId}
                       name="branchId"
                       label="Filial"
-                      value={branchId}
                       onChange={handleChangeBranchId}
-                      name="branch"
                       variant="outlined"
+                      id="branchId"
                       required
                       fullWidth
-                      id="branchId"
                       autoFocus
                     >
                       {branchList.map((e) => (
@@ -358,7 +356,6 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
                     value={startDate}
                     onChange={handleChangeStartDate}
                     variant="outlined"
-                    required
                     id="date"
                     label="Data Inicial"
                     type="date"
@@ -368,12 +365,12 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
                       shrink: true,
                     }}
                     style={{ marginRight: "8px", paddingBottom: "16px" }}
+                    required
                   />
                   <TextField
                     value={endDate}
                     onChange={handleChangeEndDate}
                     variant="outlined"
-                    required
                     id="date"
                     label="Data Final"
                     type="date"
@@ -383,6 +380,7 @@ export default function ProductsByBranch({ branchs, isAdmin }) {
                       shrink: true,
                     }}
                     style={{ marginRight: "8px", paddingBottom: "16px" }}
+                    required
                   />
                   <Button
                     type="button"

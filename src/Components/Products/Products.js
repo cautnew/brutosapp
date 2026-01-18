@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import api from "../../services/api";
 import SimpleTable from "../SimpleTable/SimpleTable";
-import TextField from "@material-ui/core/TextField";
 
-import UserContext from "../../Context/User/context";
 import ProductForm from "../ProductForm/ProductForm";
 import { AddBox } from "@material-ui/icons";
 import { CircularProgress } from "@material-ui/core";
@@ -19,7 +17,6 @@ export default function Products() {
     quantity: 0,
     minQuantity: 0,
   });
-  const { state } = useContext(UserContext);
   const [content, setContent] = useState("list");
 
   const pathApi = "products";
@@ -76,14 +73,13 @@ export default function Products() {
     handleChangeContent("delete");
   };
 
-  const prodValidation = (value) => {
-    const { name, categoryId, companyBranchId, minQuantity, quantity } = value;
+  // const prodValidation = (value) => {
+  //   const { name, categoryId, companyBranchId, minQuantity, quantity } = value;
 
-    return true;
-  };
+  //   return true;
+  // };
 
   const apiCreate = (value) => {
-    const dataIsValid = prodValidation(value);
     setLoading(true);
     api
       .post(pathApi, {
@@ -95,7 +91,6 @@ export default function Products() {
   };
 
   const apiEdit = (value) => {
-    const dataIsValid = prodValidation(value);
     setLoading(true);
     api
       .put(`products/${value.id}`, {
@@ -192,8 +187,8 @@ export default function Products() {
           </div>
         );
         break;
-      // default:
-      //   console.log("nada");
+      default:
+        console.warn("No content to show");
     }
     return component;
   };

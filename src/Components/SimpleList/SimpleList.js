@@ -4,7 +4,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
 import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
@@ -30,8 +29,6 @@ export default function SimpleList({
   return (
     <List className={classes.root}>
       {list.map(({ id, name }) => {
-        const labelId = `checkbox-list-label-${id}`;
-
         return (
           <>
             <Divider />

@@ -239,8 +239,8 @@ export default function Category({ handleCategory }) {
           </div>
         );
         break;
-      // default:
-      //   console.log("nada");
+      default:
+        console.warn("No content to show");
     }
     return component;
   };

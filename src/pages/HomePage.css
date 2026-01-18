@@ -1,3 +1,11 @@
 select {
   color: "#fff";
 }
+
+.MuiDrawer-root > div {
+  padding-top: 10px;
+}
+
+.MuiDrawer-root > div > div {
+  height: 65px;
+}

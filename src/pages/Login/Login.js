@@ -17,7 +17,6 @@ import Alert from "@material-ui/lab/Alert";
 import UserContext from "../../Context/User/context";
 import api from "../../services/api";
 import { login, parseJwt } from "../../services/auth";
-import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -254,7 +253,6 @@ export default function Login() {
                   variant="outlined"
                   color="primary"
                   onClick={() => setAccessCodeLogin(true)}
-                  style={{ flex: 1 }}
                 >
                   Código de acesso
                 </Button>
@@ -264,7 +262,6 @@ export default function Login() {
                   variant="outlined"
                   color="primary"
                   onClick={() => setAccessCodeLogin(false)}
-                  style={{ flex: 1 }}
                 >
                   Voltar
                 </Button>

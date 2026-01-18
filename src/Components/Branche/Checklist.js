@@ -141,7 +141,6 @@ export default function Checklist({ handleBrancheList }) {
           </div>
         );
         break;
-
       case "delete":
         component = (
           <div style={{ width: "100%", display: "flex", alignItems: "center" }}>
@@ -173,8 +172,8 @@ export default function Checklist({ handleBrancheList }) {
           </div>
         );
         break;
-      // default:
-      //   console.log("nada");
+      default:
+        console.warn("No content to show");
     }
     return component;
   };

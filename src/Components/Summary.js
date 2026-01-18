@@ -22,9 +22,7 @@ import {
 } from "@material-ui/core";
 
 import searchImg from "../assets/search-in-list-96.png";
-import { setDate } from "date-fns";
 import { SearchOutlined } from "@material-ui/icons";
-import { use } from "react";
 
 const useStyles = makeStyles({
   root: {
@@ -35,7 +33,6 @@ const useStyles = makeStyles({
 function LinearDeterminate({ inProgress }) {
   const classes = useStyles();
   const [progress, setProgress] = React.useState(0);
-  const [timerId, setTimerId] = React.useState(null);
 
   React.useEffect(() => {
     const increment = 60 / 100;
@@ -49,7 +46,6 @@ function LinearDeterminate({ inProgress }) {
       });
     }, 500);
 
-    setTimerId(timer);
     return () => {
       clearInterval(timer);
     };
@@ -63,12 +59,12 @@ function LinearDeterminate({ inProgress }) {
 }
 
 const searchTypes = {
-  ["ByEntryQuantity"]: "Quantidade de entrada",
-  ["ByOutQuantity"]: "Quantidade de saída",
-  ["ByDifferenceQuantity"]: "Quantidade de diferença",
-  ["ByFinalQuantity"]: "Quantidade final",
-  ["ByMissingQuantity"]: "O que comprar",
-  ["OrderSummary"]: "Resumo de pedidos",
+  "ByEntryQuantity": "Quantidade de entrada",
+  "ByOutQuantity": "Quantidade de saída",
+  "ByDifferenceQuantity": "Quantidade de diferença",
+  "ByFinalQuantity": "Quantidade final",
+  "ByMissingQuantity": "O que comprar",
+  "OrderSummary": "Resumo de pedidos",
 };
 
 function getPreviousDay(date = new Date()) {
@@ -96,7 +92,6 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
   const [type, setType] = useState(null);
   const [summary, setSummary] = useState([]);
   const [templateTable, setTemplateTable] = useState(null);
-  const [isAllBrandsTemplate, setIsAllBrandsTemplate] = useState(null);
   const [date, setDate] = useState(todayDate());
   const [researchQuantity, setResearchQuantity] = useState(0);
 
@@ -143,7 +138,7 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
                   <table border="0" style={{ borderCollapse: "collapse", margin: "10px" }}>
                     <thead>
                       <tr>
-                        <th colspan="2">{branch.name}</th>
+                        <th colSpan="2">{branch.name}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -189,11 +184,11 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
                   <TableHead>
                     <TableRow>
                       <TableCell>
-                        <Typography variant="subtitle3">Nome</Typography>
+                        <Typography variant="subtitle2">Nome</Typography>
                       </TableCell>
                       {branchList.map((branch) => (
                         <TableCell>
-                          <Typography variant="subtitle3">
+                          <Typography variant="subtitle2">
                             {branch.name}
                           </Typography>
                         </TableCell>
