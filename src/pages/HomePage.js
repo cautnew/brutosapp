@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -297,18 +297,15 @@ export default function HomePage() {
   } = React.useContext(UserContext);
   const [menu, setMenu] = React.useState(MENU_LIST[4]);
 
-  const handleChangeUserConfig = useCallback((value) => {
-    const userModuleList = getUserModuleList(value);
+  React.useEffect(() => {
+    const formatUser = formatUserData(parseJwt(getToken()));
+    const userModuleList = getUserModuleList(formatUser);
     setMenu(userModuleList[0].value);
     setModuleList(userModuleList);
-    setUserConfig(value);
+    setUserConfig(formatUser);
     setLoading(false);
-    handleChangeState(value);
-  }, [handleChangeState]);
-
-  React.useEffect(() => {
-    handleChangeUserConfig(formatUserData(parseJwt(getToken())));
-  }, [handleChangeUserConfig]);
+    handleChangeState(formatUser);
+  }, []);
 
   const handleChangeBranche = (value) => {
     setUserConfig((prevState) => ({ ...prevState, currentBranche: value }));
