@@ -211,7 +211,8 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
                   </TableHead>
                   <TableBody>
                     {summary.map((item) => {
-                      const isPackOfBread = item.productName.toString().toUpperCase().includes("PÃO");
+                      console.log(item);
+                      const isPackOfBread = item.productName.toString().toUpperCase().includes("PAO");
                       return (
                           <TableRow key={item.name}>
                             <TableCell component="th" scope="row">
