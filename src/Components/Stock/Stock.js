@@ -948,7 +948,7 @@ function DenseTable({ colunms, rows, setRowSelected, lineButton }) {
 
   return (
     <Container
-      masWidth="lg"
+      maxWidth="lg"
       style={{
         marginTop: "24px",
         width: "100%",
@@ -992,7 +992,8 @@ function DenseTable({ colunms, rows, setRowSelected, lineButton }) {
                     key={row.id}
                 >
                   {colunms.map((e, i) => {
-                    const valCell = row[e.key] === undefined ? 0 : row[e.key];
+                    const columnKey = e.key;
+                    const valCell = row[columnKey] === undefined ? 0 : row[columnKey];
                     return (
                         <TableCell
                             key={i}
@@ -1006,7 +1007,7 @@ function DenseTable({ colunms, rows, setRowSelected, lineButton }) {
                                       : "center"
                             }
                         >
-                          {isPackOfBread && i > 0 ? txtQtdProducts(valCell) : valCell}
+                          {columnKey === 'userNameLastUpdate' && valCell === 0 ? 'Não realizada' : isPackOfBread && i > 0 ? txtQtdProducts(valCell) : valCell}
                         </TableCell>
                     )
                   })}
