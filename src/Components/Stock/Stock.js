@@ -930,7 +930,11 @@ export default function Stock({
 function DenseTable({ colunms, rows, setRowSelected, lineButton }) {
   const classes = useStyles();
 
-  const txtQtdProducts = (quantity) => {
+  const txtQtdProducts = (columnKey, quantity) => {
+    if (columnKey === 'userNameLastUpdate') {
+      return quantity === 0 ? 'Não realizada' : quantity;
+    }
+
     if (quantity === undefined) {
       return 0;
     }
@@ -1007,7 +1011,9 @@ function DenseTable({ colunms, rows, setRowSelected, lineButton }) {
                                       : "center"
                             }
                         >
-                          {columnKey === 'userNameLastUpdate' && valCell === 0 ? 'Não realizada' : isPackOfBread && i > 0 ? txtQtdProducts(valCell) : valCell}
+                          {isPackOfBread && i > 0 ?
+                            txtQtdProducts(columnKey, valCell) :
+                            valCell}
                         </TableCell>
                     )
                   })}
