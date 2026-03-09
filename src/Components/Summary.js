@@ -22,7 +22,7 @@ import {
 } from "@material-ui/core";
 
 import searchImg from "../assets/search-in-list-96.png";
-import { SearchOutlined } from "@material-ui/icons";
+import { SearchOutlined, LocalPrintshopOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles({
   root: {
@@ -127,6 +127,45 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
     [branchs]
   );
 
+  const openPrintSummary = (data) => {
+    const totalBranchList = [{id: 'total', name: 'Total'}, ...branchList];
+    const popup = window.open("", "Print Summary", "width=800,height=600");
+    const wrapper = document.createElement("div");
+    wrapper.style = "display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; font-family: Arial, sans-serif;";
+    totalBranchList.forEach((branch) => {
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+      const headerCell = document.createElement("th");
+      const tbody = document.createElement("tbody");
+
+      headerRow.appendChild(headerCell);
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+      table.appendChild(tbody);
+      wrapper.appendChild(table);
+
+      table.style = "border-collapse: collapse; margin: 10px; width: 100%;";
+      headerCell.colSpan = 2;
+      headerCell.textContent = branch.name;
+      
+      data.forEach((item) => {
+        const row = document.createElement("tr");
+        const productCell = document.createElement("td");
+        const quantityCell = document.createElement("td");
+        row.appendChild(productCell);
+        row.appendChild(quantityCell);
+        tbody.appendChild(row);
+
+        productCell.style = "padding: 8px; border: 1px solid #ddd;";
+        productCell.textContent = item.productName;
+        quantityCell.style = "padding: 8px; border: 1px solid #ddd;";
+        quantityCell.textContent = item.branchValues[branch.id] || 0;
+      });
+    });
+    popup.document.body.append(wrapper);
+  };
+
   const getSummary = () => {
     setLoading(true);
     if (type === null) return;
@@ -146,7 +185,7 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
                 data[i].branchValues['total'] += data[i].branchValues[branchId];
               });
             }
-            setTemplateTable((
+            const result = (
               <div style={{display: "grid", gridTemplateColumns: "repeat(3, 1fr)", width: "100%"}}>
                 {[{id: 'total', name: 'Total'}, ...branchList].map((branch) => (
                   <table border="0" style={{ borderCollapse: "collapse", margin: "10px" }}>
@@ -169,7 +208,25 @@ const Summary = ({ branchs, isCentralStockAdmin }) => {
                     </tbody>
                   </table>
                 ))}
-              </div>));
+              </div>
+            );
+            setTemplateTable((<>
+              <Button
+                style={{
+                  marginBottom: "16px",
+                }}
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={() => openPrintSummary(data)}
+                disabled={!type}
+              >
+                <LocalPrintshopOutlined />
+                Imprimir resumo
+              </Button>
+              {result}
+              </>));
+            setSummary(data);
             setLoading(false);
           }
         })
