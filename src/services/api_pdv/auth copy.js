@@ -6,10 +6,10 @@ const ACCESS_TOKEN_EXPIRATION_KEY = "@StockControlSystem-AccessTokenExpPDV";
 const ACCESS_TOKEN_EXPIRATION_DATE_KEY = "@StockControlSystem-AccessTokenExpDatePDV";
 
 const api_url = "https://api.tabletcloud.com.br";
-const username = "diretoria@ntc-rs.com.br";
-const password = "ummt-3587-6499-7009@7447358";
-const client_id = "7140";
-const client_secret = "WBLW-1670-8610-6660";
+const username = "ZGlyZXRvcmlhQG50Yy1ycy5jb20uYnI=";
+const password = "dW1tdC0zNTg3LTY0OTktNzAwOUA3NDQ3MzU4";
+const client_id = "NzE0MA==";
+const client_secret = "V0JMVy0xNjcwLTg2MTAtNjY2MA==";
 
 const loadAccessToken = async () => {
   const originalTokenResponse = await fetch(`${api_url}/token`, {
